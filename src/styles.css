@@ -129,7 +129,7 @@ footer {
 }
 
 .brand strong {
-  font: 700 18px/1 "DIN Alternate", Bahnschrift, "Arial Narrow", sans-serif;
+  font: 700 16px/1 "DIN Alternate", Bahnschrift, "Arial Narrow", sans-serif;
   letter-spacing: 0.08em;
 }
 
@@ -1052,8 +1052,8 @@ footer {
   }
 
   .topbar {
-    min-height: 56px;
-    padding-inline: 24px;
+    min-height: 44px;
+    padding: 4px 24px;
   }
 
   .brand-mark {
@@ -1067,40 +1067,31 @@ footer {
 
   .workbench {
     width: min(1560px, calc(100% - 24px));
-    height: calc(100vh - 88px);
+    height: calc(100vh - 44px);
     margin: 0 auto;
-    padding: 10px 0;
-    grid-template-columns: minmax(420px, 1.05fr) minmax(430px, 1.2fr) minmax(300px, 0.85fr);
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    padding: 8px 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr) clamp(182px, 30vh, 300px);
     grid-template-areas:
-      "intro intro intro"
-      "tuner telemetry config"
-      "tuner telemetry note";
-    gap: 10px;
+      "tuner telemetry"
+      "config config";
+    column-gap: 10px;
+    row-gap: 6px;
   }
 
   .intro {
-    max-width: none;
-    min-height: 44px;
-    padding: 0 4px 3px;
-    display: grid;
-    grid-template-columns: auto minmax(260px, 1fr);
-    grid-template-areas:
-      "eyebrow copy"
-      "title copy";
-    align-items: center;
-    gap: 0 24px;
+    display: none;
   }
 
   .intro .eyebrow {
     grid-area: eyebrow;
-    margin-bottom: 1px;
+    margin: 0;
   }
 
   .intro h1 {
     grid-area: title;
     max-width: none;
-    font-size: var(--type-display);
+    font-size: 20px;
     line-height: 1;
     white-space: nowrap;
   }
@@ -1122,6 +1113,10 @@ footer {
     padding: 14px;
   }
 
+  .tuner-panel {
+    padding: 7px 9px;
+  }
+
   .telemetry-panel {
     overflow: hidden;
   }
@@ -1138,7 +1133,22 @@ footer {
   }
 
   .config-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 2.4fr) minmax(300px, 0.6fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+      "config-heading leo"
+      "config-output leo";
+    column-gap: 12px;
     overflow: hidden;
+  }
+
+  .config-panel > .panel-heading {
+    grid-area: config-heading;
+  }
+
+  .config-panel > #config-output {
+    grid-area: config-output;
   }
 
   .panel-heading {
@@ -1158,28 +1168,33 @@ footer {
 
   .parameter-list {
     position: relative;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 8px;
+    padding-top: 6px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
   }
 
   .parameter-control {
     position: relative;
-    padding: 1px 0 3px;
+    padding: 5px 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(190px, 1fr);
+    align-items: center;
+    gap: 10px;
   }
 
   .parameter-control:first-child {
-    padding-top: 1px;
+    padding-top: 5px;
   }
 
   .parameter-compact-header {
-    min-height: 28px;
+    min-height: 26px;
     grid-template-columns: minmax(0, 1fr) auto 24px;
     gap: 6px;
   }
 
   .parameter-name {
     display: grid;
-    gap: 2px;
+    gap: 3px;
   }
 
   .parameter-name strong {
@@ -1202,14 +1217,14 @@ footer {
     gap: 8px;
   }
 
-  .parameter-control:nth-child(odd) .parameter-help p {
-    right: auto;
-    left: 0;
+  .parameter-control .parameter-help p {
+    right: 0;
+    left: auto;
   }
 
   .number-input {
-    min-height: 30px;
-    padding-block: 4px;
+    min-height: 26px;
+    padding-block: 2px;
     font-size: var(--type-data);
   }
 
@@ -1218,12 +1233,17 @@ footer {
   }
 
   .auto-gain-row {
-    margin-top: 8px;
-    padding: 5px 7px;
+    width: max-content;
+    max-width: 100%;
+    margin-top: 4px;
+    padding: 6px 10px;
+    gap: 10px;
   }
 
   .auto-gain-row > div {
-    gap: 2px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
   }
 
   .auto-gain-row strong {
@@ -1240,7 +1260,17 @@ footer {
   }
 
   .tuner-panel .panel-heading {
-    margin-bottom: 12px;
+    margin-bottom: 4px;
+  }
+
+  .tuner-panel .panel-heading > div {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .tuner-panel .section-index {
+    margin-bottom: 0;
   }
 
   .peak-readout strong {
@@ -1282,6 +1312,10 @@ footer {
     padding: 10px;
   }
 
+  .config-panel {
+    padding-block: 7px;
+  }
+
   .copy-button {
     min-height: 32px;
     padding-inline: 10px;
@@ -1289,14 +1323,27 @@ footer {
   }
 
   .config-output {
-    padding: 8px;
+    padding: 6px 8px;
     font-size: var(--type-data);
-    line-height: 1.35;
+    line-height: 1.25;
+  }
+
+  .config-panel > #config-output {
+    height: 100%;
+    min-height: 0;
+    column-count: 3;
+    column-gap: 18px;
+    column-rule: 1px solid var(--hairline);
+    overflow: hidden;
   }
 
   .leo-settings {
-    margin-top: 8px;
-    padding-top: 8px;
+    grid-area: leo;
+    min-width: 0;
+    margin: 0;
+    padding: 0 0 0 12px;
+    border-top: 0;
+    border-left: 1px solid var(--hairline);
   }
 
   .config-block-heading {
@@ -1304,12 +1351,11 @@ footer {
   }
 
   .config-note {
-    margin-top: 6px;
-    line-height: 1.35;
+    display: none;
   }
 
   .model-note {
-    display: block;
+    display: none;
   }
 
   .model-note .section-index {
@@ -1331,9 +1377,24 @@ footer {
   }
 
   footer {
-    min-height: 32px;
-    padding-inline: 24px;
-    font-size: 12px;
+    display: none;
+  }
+}
+
+@media (min-width: 1101px) and (max-height: 800px) {
+  .workbench {
+    grid-template-rows: minmax(0, 1fr) 174px;
+  }
+}
+
+@media (min-width: 1101px) and (min-height: 900px) {
+  .parameter-control,
+  .parameter-control:first-child {
+    padding-block: 8px;
+  }
+
+  .parameter-name {
+    gap: 4px;
   }
 }
 

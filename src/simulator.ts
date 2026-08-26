@@ -243,14 +243,19 @@ export function simulate(parameters: SimulatorParameters): SimulationResult {
     gamma: clampGamma(parameters.gamma),
   };
   let gainMagnitude = Math.abs(parameters.gain);
-  let points = simulateWithGain(normalizedParameters, gainMagnitude);
-  let peak = findPeak(points);
 
-  if (parameters.autoGain && gainMagnitude !== 0 && peak.force > 0) {
-    gainMagnitude *= CLIPPING_FORCE / peak.force;
-    points = simulateWithGain(normalizedParameters, gainMagnitude);
-    peak = findPeak(points);
+  if (parameters.autoGain && gainMagnitude !== 0) {
+    const referencePeak = findPeak(simulateWithGain(normalizedParameters, 1));
+    if (referencePeak.force > 0) {
+      gainMagnitude = Math.pow(
+        CLIPPING_FORCE / referencePeak.force,
+        1 / normalizedParameters.gamma,
+      );
+    }
   }
+
+  const points = simulateWithGain(normalizedParameters, gainMagnitude);
+  const peak = findPeak(points);
 
   return {
     parameters: {

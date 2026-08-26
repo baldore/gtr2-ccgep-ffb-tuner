@@ -363,12 +363,13 @@ function renderChart(result: SimulationResult): void {
 
   const definitions = createSvgElement("defs");
   const plotClip = createSvgElement("clipPath", { id: "chart-plot-clip" });
+  const seriesClipPadding = 3;
   plotClip.append(
     createSvgElement("rect", {
-      x: margin.left,
-      y: margin.top,
-      width: plotWidth,
-      height: plotHeight,
+      x: margin.left - seriesClipPadding,
+      y: margin.top - seriesClipPadding,
+      width: plotWidth + seriesClipPadding * 2,
+      height: plotHeight + seriesClipPadding * 2,
     }),
   );
   definitions.append(plotClip);
@@ -458,7 +459,7 @@ function renderChart(result: SimulationResult): void {
   );
   const clippingLabel = createSvgElement("text", {
     x: width - margin.right - 8,
-    y: clippingY - 9,
+    y: clippingY - 28,
     "text-anchor": "end",
     class: "clipping-label",
   });

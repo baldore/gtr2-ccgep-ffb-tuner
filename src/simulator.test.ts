@@ -105,6 +105,30 @@ describe("latest CCGEP workbook model", () => {
     expect(changed.points).toEqual(baseline.points);
   });
 
+  it("should keep auto-gain curves independent of adjustment direction", () => {
+    const targetTrail = 0.000009;
+    const simulateFrom = (startingTrail: number) => {
+      const gammaAdjusted = simulate({ ...DEFAULT_PARAMETERS, gamma: 0.9 });
+      const startingResult = simulate({
+        ...gammaAdjusted.parameters,
+        pneumaticTrailNm: startingTrail,
+      });
+
+      return simulate({
+        ...startingResult.parameters,
+        pneumaticTrailNm: targetTrail,
+      });
+    };
+
+    const increased = simulateFrom(0.000008);
+    const decreased = simulateFrom(0.00001);
+
+    expect(increased.parameters.gain).toBeCloseTo(decreased.parameters.gain, 12);
+    expect(increased.peak.force).toBeCloseTo(CLIPPING_FORCE, 8);
+    expect(decreased.peak.force).toBeCloseTo(CLIPPING_FORCE, 8);
+    expect(increased.points).toEqual(decreased.points);
+  });
+
   it("keeps a finite gain when auto gain has no force to scale", () => {
     const result = simulate({
       ...DEFAULT_PARAMETERS,
