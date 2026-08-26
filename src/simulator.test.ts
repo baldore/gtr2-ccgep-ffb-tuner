@@ -31,7 +31,7 @@ describe("CCGEP workbook model", () => {
     expect(result.parameters.gain).not.toBe(10);
   });
 
-  it("preserves signed gain in config while graphing force magnitude", () => {
+  it("normalizes signed gain like the workbook", () => {
     const result = simulate({
       ...DEFAULT_PARAMETERS,
       gain: -8,
@@ -40,7 +40,8 @@ describe("CCGEP workbook model", () => {
     const config = generateConfig(result.parameters);
 
     expect(result.peak.force).toBeGreaterThan(0);
-    expect(config).toContain("ffbCCGEPGain=-8");
+    expect(result.parameters.gain).toBe(8);
+    expect(config).toContain("ffbCCGEPGain=8");
   });
 
   it("generates the six-line workbook output", () => {
@@ -56,8 +57,20 @@ describe("CCGEP workbook model", () => {
     );
   });
 
-  it("formats LeoFFB like the primary config", () => {
+  it("reproduces the workbook LeoFFB output", () => {
     expect(LEO_FFB_CONFIG.split("\n")).toHaveLength(4);
-    expect(LEO_FFB_CONFIG).not.toContain(" = ");
+    expect(LEO_FFB_CONFIG).toContain(" = ");
+  });
+
+  it("keeps a finite gain when auto gain has no torque to scale", () => {
+    const result = simulate({
+      ...DEFAULT_PARAMETERS,
+      gain: 10,
+      pneumaticTrailNm: 0,
+      suspensionTrailM: 0,
+    });
+
+    expect(result.peak.force).toBe(0);
+    expect(result.parameters.gain).toBe(10);
   });
 });

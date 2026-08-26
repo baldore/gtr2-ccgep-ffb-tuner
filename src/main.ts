@@ -1,5 +1,11 @@
 import "./styles.css";
 import {
+  EXCEL_FORCE_MAX,
+  EXCEL_GRIP_SLIP_MAX,
+  EXCEL_PRIMARY_SLIP_MAX,
+  smoothPath,
+} from "./chart";
+import {
   CLIPPING_FORCE,
   DEFAULT_PARAMETERS,
   generateConfig,
@@ -36,7 +42,7 @@ const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     step: 0.01,
     defaultValue: "10",
     range: "Typical: 5–15",
-    note: "Scales every steering force. Too high clips and can feel numb or oscillate; too low feels light. Sign can reverse wheel direction. Auto mode calculates the magnitude.",
+    note: "Scales every steering force. Too high clips and can feel numb or oscillate; too low feels light. Like the workbook, negative entries are normalized to a positive magnitude. Auto mode calculates the magnitude.",
   },
   {
     key: "pneumaticTrailNm",
@@ -256,13 +262,12 @@ function linePath(
   xScale: (value: number) => number,
   yScale: (value: number) => number,
 ): string {
-  return result.points
-    .map((point, index) => {
-      const x = xScale(point.slip).toFixed(2);
-      const y = yScale(point[key]).toFixed(2);
-      return `${index === 0 ? "M" : "L"}${x},${y}`;
-    })
-    .join(" ");
+  return smoothPath(
+    result.points.map((point) => ({
+      x: xScale(point.slip),
+      y: yScale(point[key]),
+    })),
+  );
 }
 
 function renderChart(result: SimulationResult): void {
@@ -272,16 +277,17 @@ function renderChart(result: SimulationResult): void {
   const width = isCompact ? 540 : 820;
   const height = isCompact ? 430 : 470;
   const margin = isCompact
-    ? { top: 22, right: 28, bottom: 60, left: 72 }
+    ? { top: 22, right: 48, bottom: 60, left: 72 }
     : { top: 24, right: 58, bottom: 58, left: 72 };
   chart.setAttribute("viewBox", `0 0 ${width} ${height}`);
   chart.classList.toggle("is-compact", isCompact);
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
-  const xMax = 30;
-  const suggestedYMax = Math.max(12_000, result.peak.force * 1.12);
-  const yMax = Math.ceil(suggestedYMax / 2_000) * 2_000;
+  const xMax = EXCEL_PRIMARY_SLIP_MAX;
+  const yMax = EXCEL_FORCE_MAX;
   const xScale = (value: number) => margin.left + (value / xMax) * plotWidth;
+  const gripXScale = (value: number) =>
+    margin.left + (value / EXCEL_GRIP_SLIP_MAX) * plotWidth;
   const yScale = (value: number) => margin.top + plotHeight - (value / yMax) * plotHeight;
   const gripScale = (value: number) => margin.top + plotHeight - value * plotHeight;
 
@@ -291,6 +297,19 @@ function renderChart(result: SimulationResult): void {
   description.textContent =
     "Force feedback by relative tire slip for low, medium, and high front-tire loads, with grip and the 10,000 clipping limit.";
   chart.append(title, description);
+
+  const definitions = createSvgElement("defs");
+  const plotClip = createSvgElement("clipPath", { id: "chart-plot-clip" });
+  plotClip.append(
+    createSvgElement("rect", {
+      x: margin.left,
+      y: margin.top,
+      width: plotWidth,
+      height: plotHeight,
+    }),
+  );
+  definitions.append(plotClip);
+  chart.append(definitions);
 
   const grid = createSvgElement("g", { class: "chart-grid" });
   for (let value = 0; value <= yMax; value += 2_000) {
@@ -313,7 +332,7 @@ function renderChart(result: SimulationResult): void {
     grid.append(label);
   }
 
-  const xTickStep = isCompact ? 10 : 5;
+  const xTickStep = isCompact ? 5 : 2;
   for (let value = 0; value <= xMax; value += xTickStep) {
     const x = xScale(value);
     grid.append(
@@ -333,6 +352,18 @@ function renderChart(result: SimulationResult): void {
     label.textContent = String(value);
     grid.append(label);
   }
+
+  for (let value = 0; value <= 1; value += 0.2) {
+    const y = gripScale(value);
+    const label = createSvgElement("text", {
+      x: width - margin.right + 12,
+      y: y + 4,
+      "text-anchor": "start",
+      class: "axis-label grip-axis-label",
+    });
+    label.textContent = `${Math.round(value * 100)}%`;
+    grid.append(label);
+  }
   chart.append(grid);
 
   const yTitle = createSvgElement("text", {
@@ -342,14 +373,14 @@ function renderChart(result: SimulationResult): void {
     "text-anchor": "middle",
     class: "axis-title",
   });
-  yTitle.textContent = "FORCE FEEDBACK";
+  yTitle.textContent = "FFB";
   const xTitle = createSvgElement("text", {
     x: margin.left + plotWidth / 2,
     y: height - 8,
     "text-anchor": "middle",
     class: "axis-title",
   });
-  xTitle.textContent = "RELATIVE TIRE SLIP";
+  xTitle.textContent = "TIRE SLIP";
   chart.append(yTitle, xTitle);
 
   const clippingY = yScale(CLIPPING_FORCE);
@@ -377,14 +408,23 @@ function renderChart(result: SimulationResult): void {
     { key: "high", className: "series-high" },
     { key: "grip", className: "series-grip" },
   ];
+  const seriesGroup = createSvgElement("g", {
+    "clip-path": "url(#chart-plot-clip)",
+  });
   for (const { key, className } of series) {
-    chart.append(
+    seriesGroup.append(
       createSvgElement("path", {
-        d: linePath(result, key, xScale, key === "grip" ? gripScale : yScale),
+        d: linePath(
+          result,
+          key,
+          key === "grip" ? gripXScale : xScale,
+          key === "grip" ? gripScale : yScale,
+        ),
         class: `chart-series ${className}`,
       }),
     );
   }
+  chart.append(seriesGroup);
 
   const cursor = createSvgElement("g", { class: "chart-cursor", visibility: "hidden" });
   const cursorLine = createSvgElement("line", {

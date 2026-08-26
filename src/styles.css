@@ -665,6 +665,10 @@ footer {
   font-size: 12px;
 }
 
+.grip-axis-label {
+  fill: var(--grip-blue);
+}
+
 .ffb-chart.is-compact .axis-label {
   font-size: 14px;
 }
