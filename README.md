@@ -4,7 +4,7 @@ Static TypeScript port of the `FFB Player` sheet and VBA simulator from
 `GTR2_CCGEP_FFB_info.xlsb`. It runs entirely in the browser: no Excel, backend,
 database, or file upload required.
 
-Use it online: [baldore.github.io/ccgep-excel-webapp](https://baldore.github.io/ccgep-excel-webapp/)
+Use it online: [baldore.github.io/gtr2-ccgep-ffb-tuner](https://baldore.github.io/gtr2-ccgep-ffb-tuner/)
 
 ## Included
 
