@@ -1,5 +1,26 @@
 # CCGEP FFB Tuner
 
+## Credits and provenance
+
+This is an AI-assisted browser translation of the supplied workbook. The web
+port adds no new force-feedback research; it reproduces the workbook behavior
+without Excel.
+
+- **Force model — Niels Heusinkveld** — steering-force math, tuning
+  methodology, workbook model, and parameter guidance
+- **GTR2 integration — The Iron Wolf** — CCGEP creator and engineer who brought
+  the force model into GTR2
+- **Track testing — @shovas and @chriss4303** — testing and feedback credited
+  with the CCGEP steering-force release
+- **Community — Crew Chief and GTR2 modders** — distribution, documentation,
+  troubleshooting, and years of keeping GTR2 alive
+
+Upstream resources: [CCGEP manual](https://thecrewchief.org/downloads/gtr2/GTR2_CC_EP.pdf),
+[project thread](https://thecrewchief.org/showthread.php?2012-Crew-Chief-GTR2-Enhancements-Plugin-Setup-Instructions-Known-Issues-and-Changelog),
+and [Niels' setup video](https://www.youtube.com/watch?v=hAptvoash58).
+
+## About this tuner
+
 Static TypeScript port of the `FFB Player` sheet and VBA simulator from
 `GTR2_CCGEP_FFB_info.xlsb`. It runs entirely in the browser: no Excel, backend,
 database, or file upload required.
@@ -15,25 +36,6 @@ Use it online: [baldore.github.io/gtr2-ccgep-ffb-tuner](https://baldore.github.i
 - Live SVG chart for low, medium, and high tire load, grip, and clipping
 - Copy-ready `ccgep.ini` and suggested LeoFFB snippets
 - Local browser persistence
-
-## Credits
-
-- **Niels Heusinkveld** — CCGEP steering-force math, tuning methodology,
-  workbook model, and parameter guidance
-- **The Iron Wolf** — Crew Chief GTR2 Enhancements Plugin creator and GTR2
-  integration
-- **@shovas and @chriss4303** — testing and feedback credited with the
-  steering-force release
-- **Crew Chief and GTR2 modding communities** — distribution, documentation,
-  troubleshooting, and long-term support
-
-This web version is an AI-assisted TypeScript translation of the supplied
-workbook. It adds no original force-feedback research and exists to make the
-workbook behavior usable without Excel.
-
-Upstream resources: [CCGEP manual](https://thecrewchief.org/downloads/gtr2/GTR2_CC_EP.pdf),
-[project thread](https://thecrewchief.org/showthread.php?2012-Crew-Chief-GTR2-Enhancements-Plugin-Setup-Instructions-Known-Issues-and-Changelog),
-and [Niels' setup video](https://www.youtube.com/watch?v=hAptvoash58).
 
 The workbook's `MyPLRfile` and `My ccgep.ini settings` sheets are reference text,
 not part of the simulator, so they are not reproduced as editors.
