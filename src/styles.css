@@ -21,6 +21,12 @@
   --spacing: 8px;
   --radius-small: 3px;
   --radius-panel: 6px;
+  --type-micro: 12px;
+  --type-meta: 12px;
+  --type-data: 12px;
+  --type-control: 13px;
+  --type-section: 21px;
+  --type-display: 48px;
   font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -129,17 +135,61 @@ footer {
 
 .brand small {
   color: var(--aluminum-muted);
-  font: 600 9px/1.2 "SFMono-Regular", Consolas, monospace;
+  font: 600 12px/1.2 "SFMono-Regular", Consolas, monospace;
   letter-spacing: 0.12em;
 }
 
 .runtime-status {
   color: var(--aluminum-muted);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.credits-trigger {
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid var(--pit-amber);
+  border-radius: var(--radius-small);
+  background: rgba(240, 184, 75, 0.07);
+  color: var(--pit-amber);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: 700 12px "SFMono-Regular", Consolas, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    transform 120ms ease;
+}
+
+.credits-trigger svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.credits-trigger:hover {
+  background: var(--pit-amber);
+  color: var(--pit-amber-ink);
+}
+
+.credits-trigger:active {
+  transform: translateY(1px);
 }
 
 .runtime-status > span {
@@ -174,7 +224,7 @@ footer {
 .section-index {
   margin: 0 0 10px;
   color: var(--pit-amber);
-  font-size: 10px;
+  font-size: var(--type-meta);
   font-weight: 700;
   letter-spacing: 0.14em;
 }
@@ -183,7 +233,7 @@ footer {
   max-width: 720px;
   margin: 0;
   color: var(--high-load);
-  font: 700 clamp(38px, 5vw, 68px) / 0.98 "DIN Alternate", Bahnschrift, "Arial Narrow", sans-serif;
+  font: 700 var(--type-display) / 0.98 "DIN Alternate", Bahnschrift, "Arial Narrow", sans-serif;
   letter-spacing: -0.035em;
 }
 
@@ -198,7 +248,7 @@ footer {
 .intro code,
 .model-note code {
   color: var(--aluminum);
-  font-size: 0.9em;
+  font-size: 1em;
 }
 
 .panel {
@@ -237,10 +287,11 @@ footer {
 }
 
 .panel-heading h2,
-.model-note h2 {
+.model-note h2,
+.config-block-heading h3 {
   margin: 0;
   color: var(--high-load);
-  font: 650 21px/1.2 "DIN Alternate", Bahnschrift, "Arial Narrow", sans-serif;
+  font: 650 var(--type-section) / 1.2 "DIN Alternate", Bahnschrift, "Arial Narrow", sans-serif;
   letter-spacing: -0.01em;
 }
 
@@ -261,25 +312,24 @@ footer {
 
 .parameter-list {
   border-top: 1px solid var(--hairline);
+  display: grid;
+  gap: var(--spacing);
 }
 
 .parameter-control {
   border-bottom: 1px solid var(--hairline);
 }
 
-.parameter-control summary {
-  min-height: 62px;
-  padding: 11px 0;
-  list-style: none;
-  display: grid;
-  grid-template-columns: 1fr auto 24px;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
+.parameter-control:first-child {
+  padding-top: var(--spacing);
 }
 
-.parameter-control summary::-webkit-details-marker {
-  display: none;
+.parameter-compact-header {
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: 1fr auto 24px;
+  align-items: start;
+  gap: 10px;
 }
 
 .parameter-name {
@@ -289,21 +339,21 @@ footer {
 }
 
 .parameter-name strong {
-  font-size: 14px;
+  font-size: var(--type-control);
   font-weight: 650;
 }
 
 .parameter-name small {
   overflow: hidden;
   color: var(--aluminum-faint);
-  font: 9px/1.2 "SFMono-Regular", Consolas, monospace;
+  font: var(--type-micro) / 1.2 "SFMono-Regular", Consolas, monospace;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .parameter-unit {
   color: var(--aluminum-muted);
-  font: 10px "SFMono-Regular", Consolas, monospace;
+  font: var(--type-meta) "SFMono-Regular", Consolas, monospace;
 }
 
 .info-dot {
@@ -314,23 +364,58 @@ footer {
   color: var(--aluminum-muted);
   display: grid;
   place-items: center;
-  font: 600 10px Georgia, serif;
+  font: 600 12px Georgia, serif;
   transition: 150ms ease;
-}
-
-.parameter-control[open] .info-dot {
-  border-color: var(--pit-amber);
-  background: var(--pit-amber);
-  color: var(--pit-amber-ink);
 }
 
 .parameter-body {
   padding: 0 0 18px;
 }
 
+.parameter-help {
+  position: relative;
+}
+
+.parameter-help summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.parameter-help summary::-webkit-details-marker {
+  display: none;
+}
+
+.parameter-help[open] .info-dot {
+  border-color: var(--pit-amber);
+  background: var(--pit-amber);
+  color: var(--pit-amber-ink);
+}
+
+.parameter-help p {
+  position: absolute;
+  z-index: 10;
+  top: 28px;
+  right: 0;
+  width: 280px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--hairline-strong);
+  border-left: 2px solid var(--pit-amber);
+  border-radius: var(--radius-small);
+  background: var(--asphalt-deep);
+  color: var(--aluminum-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.parameter-control:nth-last-child(-n + 2) .parameter-help p {
+  top: auto;
+  bottom: 28px;
+}
+
 .input-pair {
   display: grid;
-  grid-template-columns: 1fr 112px;
+  grid-template-columns: minmax(0, 1fr) 152px;
   gap: 12px;
   align-items: center;
 }
@@ -386,7 +471,7 @@ footer {
   border-radius: var(--radius-small);
   background: var(--asphalt-deep);
   color: var(--high-load);
-  font: 12px "SFMono-Regular", Consolas, monospace;
+  font: var(--type-data) "SFMono-Regular", Consolas, monospace;
   text-align: right;
 }
 
@@ -406,16 +491,7 @@ footer {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font: 9px/1.3 "SFMono-Regular", Consolas, monospace;
-}
-
-.parameter-body p {
-  margin: 14px 0 0;
-  padding-left: 12px;
-  border-left: 2px solid var(--pit-amber);
-  color: var(--aluminum-muted);
-  font-size: 12px;
-  line-height: 1.55;
+  font: var(--type-micro) / 1.3 "SFMono-Regular", Consolas, monospace;
 }
 
 .auto-gain-row {
@@ -437,12 +513,12 @@ footer {
 
 .auto-gain-row strong {
   color: var(--high-load);
-  font-size: 13px;
+  font-size: var(--type-control);
 }
 
 .auto-gain-row span {
   color: var(--aluminum-muted);
-  font-size: 11px;
+  font-size: var(--type-data);
   line-height: 1.4;
 }
 
@@ -503,7 +579,7 @@ footer {
 .peak-readout span {
   color: var(--aluminum-muted);
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.1em;
 }
 
@@ -531,7 +607,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: var(--type-meta);
 }
 
 .legend-line {
@@ -586,7 +662,7 @@ footer {
 
 .axis-label {
   fill: var(--aluminum-faint);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .ffb-chart.is-compact .axis-label {
@@ -595,7 +671,7 @@ footer {
 
 .axis-title {
   fill: var(--aluminum-muted);
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.08em;
 }
 
@@ -639,7 +715,7 @@ footer {
 
 .clipping-label {
   fill: var(--brake-red);
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -661,7 +737,7 @@ footer {
 
 .cursor-text {
   fill: var(--aluminum);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .telemetry-strip {
@@ -685,19 +761,18 @@ footer {
 
 .telemetry-strip span {
   color: var(--aluminum-faint);
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .telemetry-strip strong {
   color: var(--high-load);
-  font-size: 13px;
+  font-size: var(--type-data);
   font-weight: 500;
 }
 
-.copy-button,
-.secondary-button {
+.copy-button {
   min-height: 38px;
   padding: 0 14px;
   border: 1px solid var(--pit-amber);
@@ -709,19 +784,17 @@ footer {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--type-meta);
   font-weight: 700;
   transition: background 150ms ease, color 150ms ease;
 }
 
-.copy-button:hover,
-.secondary-button:hover {
+.copy-button:hover {
   background: transparent;
   color: var(--pit-amber);
 }
 
-.copy-button.copied,
-.secondary-button.copied {
+.copy-button.copied {
   border-color: var(--success-green);
   background: var(--success-green);
   color: var(--asphalt-deep);
@@ -734,12 +807,11 @@ footer {
   stroke-width: 1.7;
 }
 
-.config-output,
-.leo-settings pre {
+.config-output {
   margin: 0;
   overflow-x: auto;
   color: var(--aluminum);
-  font-size: clamp(11px, 1.4vw, 14px);
+  font-size: var(--type-data);
   line-height: 1.9;
   white-space: pre;
 }
@@ -753,78 +825,26 @@ footer {
 }
 
 .leo-settings {
-  margin-top: 16px;
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-small);
-}
-
-.leo-settings summary {
-  min-height: 64px;
-  padding: 14px 16px;
-  list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  cursor: pointer;
-}
-
-.leo-settings summary::-webkit-details-marker {
-  display: none;
-}
-
-.leo-settings summary > span:first-child {
-  display: grid;
-  gap: 3px;
-}
-
-.leo-settings summary strong {
-  color: var(--high-load);
-  font-size: 13px;
-}
-
-.leo-settings summary small,
-.summary-action {
-  color: var(--aluminum-muted);
-  font-size: 10px;
-}
-
-.summary-action {
-  border-bottom: 1px solid var(--hairline-strong);
-}
-
-.leo-settings[open] .summary-action {
-  color: var(--pit-amber);
-}
-
-.leo-settings > div {
-  padding: 16px;
+  margin-top: 20px;
+  padding-top: 20px;
   border-top: 1px solid var(--hairline);
 }
 
-.leo-settings p {
-  max-width: 760px;
-  margin: 0 0 16px;
+.config-block-heading {
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.config-block-heading h3 {
+  margin: 0;
+  color: var(--high-load);
+}
+
+.config-note {
+  margin: 10px 0 0;
   color: var(--aluminum-muted);
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.leo-settings pre {
-  margin-bottom: 16px;
-  padding: 16px;
-  background: var(--asphalt-deep);
-}
-
-.secondary-button {
-  min-height: 34px;
-  background: transparent;
-  color: var(--pit-amber);
-}
-
-.secondary-button:hover {
-  background: var(--pit-amber);
-  color: var(--pit-amber-ink);
+  font-size: var(--type-data);
+  line-height: 1.5;
 }
 
 .model-note {
@@ -859,7 +879,7 @@ footer {
   padding-top: 16px;
   border-top: 1px solid var(--hairline);
   color: var(--aluminum-faint);
-  font: 10px "SFMono-Regular", Consolas, monospace;
+  font: 12px "SFMono-Regular", Consolas, monospace;
 }
 
 footer {
@@ -871,11 +891,427 @@ footer {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.08em;
 }
 
-@media (max-width: 980px) {
+.dialog-open {
+  overflow: hidden;
+}
+
+.credits-dialog {
+  width: min(880px, calc(100% - 32px));
+  max-height: min(760px, calc(100vh - 32px));
+  padding: 0;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-panel);
+  background: var(--asphalt-raised);
+  color: var(--aluminum);
+  overflow: auto;
+}
+
+.credits-dialog::backdrop {
+  background: rgba(5, 7, 8, 0.82);
+  backdrop-filter: blur(4px);
+}
+
+.credits-shell {
+  padding: 32px;
+}
+
+.credits-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.credits-heading h2 {
+  margin: 0;
+  color: var(--high-load);
+  font: 700 clamp(30px, 5vw, 48px) / 1 "DIN Alternate", Bahnschrift, "Arial Narrow", sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.credits-close {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 50%;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.credits-close:hover {
+  border-color: var(--pit-amber);
+  color: var(--pit-amber);
+}
+
+.credits-close svg {
+  width: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.credits-intro {
+  max-width: 680px;
+  margin: 24px 0;
+  color: var(--aluminum-muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.crew-roster {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+}
+
+.crew-roster article {
+  min-height: 156px;
+  padding: 20px;
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  background: var(--asphalt);
+}
+
+.crew-roster article:hover {
+  background: var(--rubber);
+}
+
+.crew-roster p {
+  margin: 0 0 16px;
+  color: var(--pit-amber);
+  font: 700 12px "SFMono-Regular", Consolas, monospace;
+  letter-spacing: 0.1em;
+}
+
+.crew-roster h3 {
+  margin: 0 0 8px;
+  color: var(--high-load);
+  font: 650 20px "DIN Alternate", Bahnschrift, "Arial Narrow", sans-serif;
+}
+
+.crew-roster span {
+  color: var(--aluminum-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.credit-links {
+  padding-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+}
+
+.credit-links a {
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--hairline-strong);
+  color: var(--aluminum-muted);
+  font: 12px "SFMono-Regular", Consolas, monospace;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.credit-links a:hover {
+  border-color: var(--pit-amber);
+  color: var(--pit-amber);
+}
+
+@media (min-width: 1101px) {
+  :root {
+    --type-micro: 12px;
+    --type-meta: 12px;
+    --type-data: 12px;
+    --type-control: 13px;
+    --type-section: 16px;
+    --type-display: 28px;
+  }
+
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .topbar {
+    min-height: 56px;
+    padding-inline: 24px;
+  }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  .brand-mark svg {
+    width: 23px;
+  }
+
+  .workbench {
+    width: min(1560px, calc(100% - 24px));
+    height: calc(100vh - 88px);
+    margin: 0 auto;
+    padding: 10px 0;
+    grid-template-columns: minmax(260px, 0.76fr) minmax(460px, 1.45fr) minmax(300px, 0.88fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "intro intro intro"
+      "tuner telemetry config"
+      "tuner telemetry note";
+    gap: 10px;
+  }
+
+  .intro {
+    max-width: none;
+    min-height: 44px;
+    padding: 0 4px 3px;
+    display: grid;
+    grid-template-columns: auto minmax(260px, 1fr);
+    grid-template-areas:
+      "eyebrow copy"
+      "title copy";
+    align-items: center;
+    gap: 0 24px;
+  }
+
+  .intro .eyebrow {
+    grid-area: eyebrow;
+    margin-bottom: 1px;
+  }
+
+  .intro h1 {
+    grid-area: title;
+    max-width: none;
+    font-size: var(--type-display);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .intro > p:last-child {
+    grid-area: copy;
+    max-width: 680px;
+    margin: 0;
+    justify-self: end;
+    font-size: var(--type-data);
+    line-height: 1.45;
+  }
+
+  .tuner-panel,
+  .telemetry-panel,
+  .config-panel,
+  .model-note {
+    min-height: 0;
+    padding: 14px;
+  }
+
+  .tuner-panel,
+  .telemetry-panel {
+    overflow: hidden;
+  }
+
+  .telemetry-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .config-panel {
+    overflow: auto;
+  }
+
+  .panel-heading {
+    margin-bottom: 9px;
+  }
+
+  .panel-heading h2,
+  .model-note h2,
+  .config-block-heading h3 {
+    font-size: var(--type-section);
+  }
+
+  .section-index {
+    margin-bottom: 4px;
+    font-size: var(--type-meta);
+  }
+
+  .parameter-list {
+    position: relative;
+  }
+
+  .parameter-control {
+    position: relative;
+    padding: 1px 0 3px;
+  }
+
+  .parameter-compact-header {
+    min-height: 28px;
+  }
+
+  .parameter-name {
+    display: grid;
+    gap: 2px;
+  }
+
+  .parameter-name strong {
+    font-size: var(--type-control);
+    line-height: 1;
+  }
+
+  .parameter-name small {
+    min-width: 0;
+    font-size: var(--type-micro);
+    line-height: 1;
+  }
+
+  .parameter-body {
+    padding: 0;
+  }
+
+  .input-pair {
+    grid-template-columns: minmax(0, 1fr) 152px;
+    gap: 8px;
+  }
+
+  .number-input {
+    min-height: 30px;
+    padding-block: 4px;
+    font-size: var(--type-data);
+  }
+
+  .parameter-scale {
+    display: none;
+  }
+
+  .auto-gain-row {
+    margin-top: 8px;
+    padding: 5px 7px;
+  }
+
+  .auto-gain-row > div {
+    gap: 2px;
+  }
+
+  .auto-gain-row strong {
+    font-size: var(--type-control);
+  }
+
+  .auto-gain-row span {
+    font-size: var(--type-meta);
+    line-height: 1.25;
+  }
+
+  .chart-heading {
+    margin-bottom: 7px;
+  }
+
+  .tuner-panel .panel-heading {
+    margin-bottom: 12px;
+  }
+
+  .peak-readout strong {
+    font-size: 22px;
+  }
+
+  .chart-meta {
+    padding: 7px 0;
+  }
+
+  .chart-frame {
+    min-height: 0;
+    flex: 1;
+    padding: 5px 0 0;
+    overflow: hidden;
+  }
+
+  .ffb-chart {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .telemetry-strip > div {
+    padding-top: 8px;
+  }
+
+  .telemetry-strip strong {
+    font-size: var(--type-data);
+  }
+
+  .config-panel .panel-heading {
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .config-panel,
+  .model-note {
+    padding: 10px;
+  }
+
+  .copy-button {
+    min-height: 32px;
+    padding-inline: 10px;
+    font-size: var(--type-meta);
+  }
+
+  .config-output {
+    padding: 8px;
+    font-size: var(--type-data);
+    line-height: 1.35;
+  }
+
+  .leo-settings {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .config-block-heading {
+    margin-bottom: 6px;
+  }
+
+  .config-note {
+    margin-top: 6px;
+    line-height: 1.35;
+  }
+
+  .model-note {
+    display: block;
+  }
+
+  .model-note .section-index {
+    display: none;
+  }
+
+  .model-note h2 {
+    margin-bottom: 4px;
+  }
+
+  .model-note > p:not(.section-index):not(.browser-note) {
+    margin: 0;
+    font-size: var(--type-data);
+    line-height: 1.35;
+  }
+
+  .browser-note {
+    display: none;
+  }
+
+  footer {
+    min-height: 32px;
+    padding-inline: 24px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1100px) {
   .workbench {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -975,6 +1411,26 @@ footer {
 
   footer span:first-child {
     display: none;
+  }
+
+  .credits-shell {
+    padding: 22px;
+  }
+
+  .credits-heading h2 {
+    font-size: 32px;
+  }
+
+  .crew-roster {
+    grid-template-columns: 1fr;
+  }
+
+  .crew-roster article {
+    min-height: 0;
+  }
+
+  .credit-links {
+    display: grid;
   }
 }
 

@@ -121,29 +121,49 @@ const peakLoad = requiredElement<HTMLElement>("#peak-load");
 const peakSlip = requiredElement<HTMLElement>("#peak-slip");
 const gainMode = requiredElement<HTMLElement>("#gain-mode");
 const limitUsage = requiredElement<HTMLElement>("#limit-usage");
+const creditsDialog = requiredElement<HTMLDialogElement>("#credits-dialog");
+
+requiredElement<HTMLButtonElement>("#credits-open").addEventListener("click", () => {
+  creditsDialog.showModal();
+  document.body.classList.add("dialog-open");
+});
+
+requiredElement<HTMLButtonElement>("#credits-close").addEventListener("click", () => {
+  creditsDialog.close();
+});
+
+creditsDialog.addEventListener("click", (event) => {
+  if (event.target === creditsDialog) creditsDialog.close();
+});
+
+creditsDialog.addEventListener("close", () => {
+  document.body.classList.remove("dialog-open");
+});
 
 function numberValue(value: number): string {
   return Number.isInteger(value) ? String(value) : String(Number.parseFloat(value.toPrecision(15)));
 }
 
-function createParameterControl(definition: ParameterDefinition): HTMLDetailsElement {
-  const details = document.createElement("details");
-  details.className = "parameter-control";
-  details.dataset.parameter = definition.key;
-
-  const summary = document.createElement("summary");
-  summary.innerHTML = `
-    <span class="parameter-name">
-      <strong>${definition.label}</strong>
-      <small>${definition.configName}</small>
-    </span>
-    <span class="parameter-unit">${definition.unit}</span>
-    <span class="info-dot" aria-hidden="true">i</span>
-  `;
-
-  const controls = document.createElement("div");
-  controls.className = "parameter-body";
-  controls.innerHTML = `
+function createParameterControl(definition: ParameterDefinition): HTMLDivElement {
+  const control = document.createElement("div");
+  control.className = "parameter-control";
+  control.dataset.parameter = definition.key;
+  control.innerHTML = `
+    <div class="parameter-compact-header">
+      <span class="parameter-name">
+        <strong>${definition.label}</strong>
+        <small>${definition.configName}</small>
+      </span>
+      <span class="parameter-unit">${definition.unit}</span>
+      <details class="parameter-help">
+        <summary class="info-dot">
+          <span aria-hidden="true">i</span>
+          <span class="sr-only">About ${definition.label}</span>
+        </summary>
+        <p>${definition.note}</p>
+      </details>
+    </div>
+    <div class="parameter-body">
     <div class="input-pair">
       <input
         class="range-input"
@@ -167,11 +187,11 @@ function createParameterControl(definition: ParameterDefinition): HTMLDetailsEle
       <span>${definition.range}</span>
       <span>Workbook default: ${definition.defaultValue}</span>
     </div>
-    <p>${definition.note}</p>
+    </div>
   `;
 
-  const rangeInput = controls.querySelector<HTMLInputElement>(".range-input");
-  const numberInput = controls.querySelector<HTMLInputElement>(".number-input");
+  const rangeInput = control.querySelector<HTMLInputElement>(".range-input");
+  const numberInput = control.querySelector<HTMLInputElement>(".number-input");
   if (!rangeInput || !numberInput) throw new Error("Parameter inputs failed to render");
 
   const update = (input: HTMLInputElement) => {
@@ -183,8 +203,7 @@ function createParameterControl(definition: ParameterDefinition): HTMLDetailsEle
 
   rangeInput.addEventListener("input", () => update(rangeInput));
   numberInput.addEventListener("input", () => update(numberInput));
-  details.append(summary, controls);
-  return details;
+  return control;
 }
 
 for (const definition of PARAMETER_DEFINITIONS) {
@@ -203,7 +222,7 @@ requiredElement<HTMLButtonElement>("#reset-button").addEventListener("click", ()
 
 function setControlValues(): void {
   for (const definition of PARAMETER_DEFINITIONS) {
-    const control = requiredElement<HTMLDetailsElement>(
+    const control = requiredElement<HTMLDivElement>(
       `[data-parameter="${definition.key}"]`,
     );
     const rangeInput = control.querySelector<HTMLInputElement>(".range-input");

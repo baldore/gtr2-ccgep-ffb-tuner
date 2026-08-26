@@ -3,6 +3,7 @@ import {
   CLIPPING_FORCE,
   DEFAULT_PARAMETERS,
   generateConfig,
+  LEO_FFB_CONFIG,
   simulate,
 } from "./simulator";
 
@@ -53,5 +54,10 @@ describe("CCGEP workbook model", () => {
         "ffbCCGEPRampUpKMH=15.000000",
       ].join("\n"),
     );
+  });
+
+  it("formats LeoFFB like the primary config", () => {
+    expect(LEO_FFB_CONFIG.split("\n")).toHaveLength(4);
+    expect(LEO_FFB_CONFIG).not.toContain(" = ");
   });
 });

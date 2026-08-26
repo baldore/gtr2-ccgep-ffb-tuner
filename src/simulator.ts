@@ -39,10 +39,10 @@ export const DEFAULT_PARAMETERS: SimulatorParameters = {
 };
 
 export const LEO_FFB_CONFIG = [
-  "ffbCCGEPLeoKf = 15000.000000",
-  "ffbCCGEPLeoKs = 5.000000",
-  "ffbCCGEPLeoA = 1.500000",
-  "ffbCCGEPLeoKr = 20.000000",
+  "ffbCCGEPLeoKf=15000.000000",
+  "ffbCCGEPLeoKs=5.000000",
+  "ffbCCGEPLeoA=1.500000",
+  "ffbCCGEPLeoKr=20.000000",
 ].join("\n");
 
 const TIRE_CURVE = [

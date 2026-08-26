@@ -24,9 +24,17 @@
           <small>FFB TUNER / GTR2</small>
         </span>
       </a>
-      <div class="runtime-status" title="No server or Excel installation required">
-        <span></span>
-        LOCAL SIMULATOR
+      <div class="topbar-actions">
+        <button class="credits-trigger" id="credits-open" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m12 3 2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8L12 3Z" />
+          </svg>
+          <span>Credits</span>
+        </button>
+        <div class="runtime-status" title="No server or Excel installation required">
+          <span></span>
+          LOCAL SIMULATOR
+        </div>
       </div>
     </header>
 
@@ -54,7 +62,7 @@
         <div class="auto-gain-row">
           <div>
             <strong>Auto-adjust gain</strong>
-            <span>Normalize highest simulated force to 10,000.</span>
+            <span>Peak force → 10,000.</span>
           </div>
           <label class="switch">
             <input id="auto-gain" type="checkbox" />
@@ -119,23 +127,26 @@
 
         <pre class="config-output" id="config-output" tabindex="0"></pre>
 
-        <details class="leo-settings">
-          <summary>
-            <span>
-              <strong>Suggested LeoFFB</strong>
-              <small>Stiff parking FFB</small>
-            </span>
-            <span class="summary-action">View settings</span>
-          </summary>
-          <div>
-            <p>
-              Strong centering may oscillate. Workbook notes recommend negative
-              <code>LeoKf</code> for Logitech, Thrustmaster, and Fanatec wheels.
-            </p>
-            <pre id="leo-output"></pre>
-            <button class="secondary-button" id="copy-leo" type="button">Copy LeoFFB</button>
+        <section class="config-block leo-settings" aria-labelledby="leo-title">
+          <div class="panel-heading config-block-heading">
+            <div>
+              <p class="section-index">LEOFFB / PARKING</p>
+              <h3 id="leo-title">Suggested LeoFFB</h3>
+            </div>
+            <button class="copy-button" id="copy-leo" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="8" y="8" width="11" height="11" rx="1" />
+                <path d="M16 8V5H5v11h3" />
+              </svg>
+              <span>Copy LeoFFB</span>
+            </button>
           </div>
-        </details>
+          <pre class="config-output" id="leo-output" tabindex="0"></pre>
+          <p class="config-note">
+            Strong centering may oscillate. Workbook suggests negative <code>LeoKf</code>
+            for Logitech, Thrustmaster, and Fanatec wheels.
+          </p>
+        </section>
       </section>
 
       <section class="model-note panel" aria-labelledby="model-note-title">
@@ -154,6 +165,62 @@
       <span>CCGEP FFB TUNER</span>
       <span>Excel-free • Static • GitHub Pages-ready</span>
     </footer>
+
+    <dialog class="credits-dialog" id="credits-dialog" aria-labelledby="credits-title">
+      <div class="credits-shell">
+        <header class="credits-heading">
+          <div>
+            <p class="section-index">PIT WALL / PROVENANCE</p>
+            <h2 id="credits-title">Original work behind this port.</h2>
+          </div>
+          <button class="credits-close" id="credits-close" type="button" aria-label="Close credits">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </header>
+
+        <p class="credits-intro">
+          This is an AI-assisted browser translation of the supplied workbook. The web port adds
+          no new force-feedback research; it reproduces the workbook behavior without Excel.
+        </p>
+
+        <div class="crew-roster">
+          <article>
+            <p>01 / FORCE MODEL</p>
+            <h3>Niels Heusinkveld</h3>
+            <span>Steering-force math, tuning methodology, workbook model, and parameter guidance.</span>
+          </article>
+          <article>
+            <p>02 / GTR2 INTEGRATION</p>
+            <h3>The Iron Wolf</h3>
+            <span>CCGEP creator and engineer who brought the force model into GTR2.</span>
+          </article>
+          <article>
+            <p>03 / TRACK TESTING</p>
+            <h3>@shovas + @chriss4303</h3>
+            <span>Testing and feedback credited with the CCGEP steering-force release.</span>
+          </article>
+          <article>
+            <p>04 / COMMUNITY</p>
+            <h3>Crew Chief + GTR2 modders</h3>
+            <span>Distribution, documentation, troubleshooting, and years of keeping GTR2 alive.</span>
+          </article>
+        </div>
+
+        <nav class="credit-links" aria-label="Upstream project links">
+          <a href="https://thecrewchief.org/downloads/gtr2/GTR2_CC_EP.pdf" target="_blank" rel="noreferrer">
+            CCGEP manual <span aria-hidden="true">↗</span>
+          </a>
+          <a href="https://thecrewchief.org/showthread.php?2012-Crew-Chief-GTR2-Enhancements-Plugin-Setup-Instructions-Known-Issues-and-Changelog" target="_blank" rel="noreferrer">
+            Project thread <span aria-hidden="true">↗</span>
+          </a>
+          <a href="https://www.youtube.com/watch?v=hAptvoash58" target="_blank" rel="noreferrer">
+            Niels’ setup video <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
+      </div>
+    </dialog>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
