@@ -39,10 +39,10 @@ export const DEFAULT_PARAMETERS: SimulatorParameters = {
 };
 
 export const LEO_FFB_CONFIG = [
-  "ffbCCGEPLeoKf=15000.000000",
-  "ffbCCGEPLeoKs=5.000000",
-  "ffbCCGEPLeoA=1.500000",
-  "ffbCCGEPLeoKr=20.000000",
+  "ffbCCGEPLeoKf = 15000.000000",
+  "ffbCCGEPLeoKs = 5.000000",
+  "ffbCCGEPLeoA = 1.500000",
+  "ffbCCGEPLeoKr = 20.000000",
 ].join("\n");
 
 const TIRE_CURVE = [
@@ -158,7 +158,6 @@ function findPeak(points: SimulationPoint[]): SimulationResult["peak"] {
 }
 
 export function simulate(parameters: SimulatorParameters): SimulationResult {
-  const signedDirection = parameters.gain < 0 ? -1 : 1;
   let gainMagnitude = Math.abs(parameters.gain);
   let points = simulateWithGain(parameters, gainMagnitude);
   let peak = findPeak(points);
@@ -172,7 +171,8 @@ export function simulate(parameters: SimulatorParameters): SimulationResult {
   return {
     parameters: {
       ...parameters,
-      gain: signedDirection * gainMagnitude,
+      // The workbook converts either sign to a positive config magnitude.
+      gain: gainMagnitude,
     },
     points,
     peak,
