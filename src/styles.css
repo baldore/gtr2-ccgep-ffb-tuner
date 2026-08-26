@@ -1331,8 +1331,8 @@ footer {
   .config-panel > #config-output {
     height: 100%;
     min-height: 0;
-    column-count: 3;
-    column-gap: 18px;
+    column-count: 2;
+    column-gap: 24px;
     column-rule: 1px solid var(--hairline);
     overflow: hidden;
   }
