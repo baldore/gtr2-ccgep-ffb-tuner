@@ -1,5 +1,5 @@
-export const EXCEL_PRIMARY_SLIP_MAX = 20;
-export const EXCEL_GRIP_SLIP_MAX = 30;
+export const EXCEL_PRIMARY_SLIP_MAX = 40;
+export const EXCEL_GRIP_SLIP_MAX = 90;
 export const EXCEL_FORCE_MAX = 13_000;
 
 export interface PathPoint {

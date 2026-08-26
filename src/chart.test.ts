@@ -8,8 +8,8 @@ import {
 
 describe("Excel chart rendering", () => {
   it("uses the workbook chart bounds", () => {
-    expect(EXCEL_PRIMARY_SLIP_MAX).toBe(20);
-    expect(EXCEL_GRIP_SLIP_MAX).toBe(30);
+    expect(EXCEL_PRIMARY_SLIP_MAX).toBe(40);
+    expect(EXCEL_GRIP_SLIP_MAX).toBe(90);
     expect(EXCEL_FORCE_MAX).toBe(13_000);
   });
 

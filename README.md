@@ -8,30 +8,33 @@ without Excel.
 
 - **Force model — Niels Heusinkveld** — steering-force math, tuning
   methodology, workbook model, and parameter guidance
-- **GTR2 integration — The Iron Wolf** — CCGEP creator and engineer who brought
-  the force model into GTR2
+- **GTR2 integration — The Iron Wolf** — CCGEP creator who brought the force
+  model into GTR2 and extended it with gamma and steering geometry
 - **Track testing — @shovas and @chriss4303** — testing and feedback credited
   with the CCGEP steering-force release
 - **Community — Crew Chief and GTR2 modders** — distribution, documentation,
   troubleshooting, and years of keeping GTR2 alive
 
-Upstream resources: [CCGEP manual](https://thecrewchief.org/downloads/gtr2/GTR2_CC_EP.pdf),
+Upstream resources: [latest FFB workbook](https://thecrewchief.org/downloads/gtr2/ffb-heusinkveld-tiw.xlsb),
+[CCGEP manual](https://thecrewchief.org/downloads/gtr2/GTR2_CC_EP.pdf),
 [project thread](https://thecrewchief.org/showthread.php?2012-Crew-Chief-GTR2-Enhancements-Plugin-Setup-Instructions-Known-Issues-and-Changelog),
 and [Niels' setup video](https://www.youtube.com/watch?v=hAptvoash58).
 
 ## About this tuner
 
 Static TypeScript port of the `FFB Player` sheet and VBA simulator from
-`GTR2_CCGEP_FFB_info.xlsb`. It runs entirely in the browser: no Excel, backend,
+`ffb-heusinkveld-tiw.xlsb`. It runs entirely in the browser: no Excel, backend,
 database, or file upload required.
 
 Use it online: [baldore.github.io/gtr2-ccgep-ffb-tuner](https://baldore.github.io/gtr2-ccgep-ffb-tuner/)
 
 ## Included
 
-- Original 51-point GTR2 tire-slip curve
+- Latest 151-point GTR2 tire-slip curve
 - Original three front-tire load pairs and load-sensitivity approximation
-- CCGEP `FFB_3` steering torque calculation
+- CCGEP `FFB_4` steering-force calculation
+- Gamma shaping plus caster, KPI, scrub, and steering-arm geometry
+- Tire spin inertia export (documented workbook reference value; config only)
 - Workbook-compatible auto-gain normalization to 10,000
 - Live SVG chart for low, medium, and high tire load, grip, and clipping
 - Copy-ready `ccgep.ini` and suggested LeoFFB snippets

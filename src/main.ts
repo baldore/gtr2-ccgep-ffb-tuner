@@ -29,6 +29,7 @@ interface ParameterDefinition {
   defaultValue: string;
   range: string;
   note: string;
+  exportOnly?: boolean;
 }
 
 const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
@@ -38,11 +39,11 @@ const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     configName: "ffbCCGEPGain",
     unit: "unitless",
     min: -100,
-    max: 100,
+    max: 0,
     step: 0.01,
-    defaultValue: "10",
-    range: "Typical: 5–15",
-    note: "Scales every steering force. Too high clips and can feel numb or oscillate; too low feels light. Like the workbook, negative entries are normalized to a positive magnitude. Auto mode calculates the magnitude.",
+    defaultValue: "−0.8",
+    range: "Typical: −5 to −15",
+    note: "Scales every steering force. More-negative values increase force and clipping. The latest workbook normalizes either sign to a negative gain; auto mode calculates the magnitude.",
   },
   {
     key: "pneumaticTrailNm",
@@ -78,7 +79,7 @@ const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     step: 0.001,
     defaultValue: "0.03",
     range: "Suggested: −0.05–0.10",
-    note: "Affects steering torque from unequal braking or front-drive traction in game. It does not change this graph because the workbook model has no longitudinal force.",
+    note: "Adds torque from unequal braking or front-drive traction in game. In the latest model it also changes the graph through caster geometry.",
   },
   {
     key: "gripFractPower",
@@ -86,15 +87,76 @@ const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     configName: "ffbCCGEPGripFractPower",
     unit: "unitless",
     min: 0.5,
-    max: 6,
+    max: 4,
     step: 0.1,
     defaultValue: "3",
     range: "Suggested: 0.5–4.0",
     note: "Controls force falloff after the peak. Larger values create a sharper, harsher drop; smaller values make the falloff slower.",
   },
+  {
+    key: "gamma",
+    label: "Gamma",
+    configName: "ffbCCGEPGamma",
+    unit: "unitless",
+    min: 0.5,
+    max: 1,
+    step: 0.01,
+    defaultValue: "1",
+    range: "Range: 0.5–1.0",
+    note: "Boosts low forces near steering center. A value of 1 applies no shaping; smaller values strengthen low forces. The workbook clamps this setting to 0.5–1.0.",
+  },
+  {
+    key: "casterDegrees",
+    label: "Caster angle",
+    configName: "ffbCCGEPCasterDegrees",
+    unit: "deg",
+    min: 0,
+    max: 30,
+    step: 0.1,
+    defaultValue: "10",
+    range: "Reference: 10°",
+    note: "Adds steering-arm force from caster geometry and vertical tire load. Match the car setup when known; zero disables the caster contribution.",
+  },
+  {
+    key: "kpiDegrees",
+    label: "KPI angle",
+    configName: "ffbCCGEPKPIDegrees",
+    unit: "deg",
+    min: 0,
+    max: 30,
+    step: 0.1,
+    defaultValue: "15",
+    range: "Reference: 15°",
+    note: "Kingpin inclination adds steering-arm force from suspension trail and vertical tire load. Zero disables the KPI contribution.",
+  },
+  {
+    key: "steeringArmLengthM",
+    label: "Steering arm length",
+    configName: "ffbCCGEPSteeringArmLengthM",
+    unit: "m",
+    min: 0,
+    max: 1,
+    step: 0.01,
+    defaultValue: "0.15",
+    range: "Reference: 0.15 m",
+    note: "Converts upright torque into steering-arm force. Shorter arms amplify force. The workbook substitutes 0.1 m when this value is zero.",
+  },
+  {
+    key: "tireSpinInertiaKgm2",
+    label: "Tire spin inertia",
+    configName: "ffbCCGEPTireSpeenInertiaKGM2",
+    unit: "kg·m²",
+    min: 0,
+    max: 10,
+    step: 0.1,
+    defaultValue: "1.8",
+    range: "Modern GT3: 1.8",
+    note: "Controls gyroscopic steering force in game. The workbook documents 1.8 for a modern GT3 tire, but this parameter does not affect the spreadsheet graph.",
+    exportOnly: true,
+  },
 ];
 
-const STORAGE_KEY = "ccgep-ffb-tuner:parameters:v1";
+const STORAGE_KEY = "ccgep-ffb-tuner:parameters:v2";
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 function requiredElement<T extends Element>(selector: string): T {
@@ -147,12 +209,13 @@ creditsDialog.addEventListener("close", () => {
 });
 
 function numberValue(value: number): string {
-  return Number.isInteger(value) ? String(value) : String(Number.parseFloat(value.toPrecision(15)));
+  return Number.isInteger(value) ? String(value) : String(Number.parseFloat(value.toPrecision(10)));
 }
 
 function createParameterControl(definition: ParameterDefinition): HTMLDivElement {
   const control = document.createElement("div");
   control.className = "parameter-control";
+  control.classList.toggle("is-export-only", definition.exportOnly === true);
   control.dataset.parameter = definition.key;
   control.innerHTML = `
     <div class="parameter-compact-header">
@@ -191,7 +254,7 @@ function createParameterControl(definition: ParameterDefinition): HTMLDivElement
     </div>
     <div class="parameter-scale">
       <span>${definition.range}</span>
-      <span>Workbook default: ${definition.defaultValue}</span>
+      <span>Workbook reference: ${definition.defaultValue}</span>
     </div>
     </div>
   `;
@@ -332,7 +395,7 @@ function renderChart(result: SimulationResult): void {
     grid.append(label);
   }
 
-  const xTickStep = isCompact ? 5 : 2;
+  const xTickStep = isCompact ? 10 : 5;
   for (let value = 0; value <= xMax; value += xTickStep) {
     const x = xScale(value);
     grid.append(
