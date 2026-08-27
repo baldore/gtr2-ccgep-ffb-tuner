@@ -1113,8 +1113,9 @@ footer {
     padding: 14px;
   }
 
-  .tuner-panel {
-    padding: 7px 9px;
+  .tuner-panel,
+  .telemetry-panel {
+    padding: 5px 14px;
   }
 
   .telemetry-panel {
@@ -1235,7 +1236,7 @@ footer {
   .auto-gain-row {
     width: max-content;
     max-width: 100%;
-    margin-top: 4px;
+    margin-top: 6px;
     padding: 6px 10px;
     gap: 10px;
   }
@@ -1255,22 +1256,55 @@ footer {
     line-height: 1.25;
   }
 
+  .tuner-heading,
   .chart-heading {
+    min-height: 26px;
+    align-items: center;
     margin-bottom: 7px;
   }
 
   .tuner-panel .panel-heading {
-    margin-bottom: 4px;
+    margin-bottom: 7px;
   }
 
-  .tuner-panel .panel-heading > div {
+  .tuner-heading > div,
+  .chart-heading > div {
+    min-width: 0;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 8px;
   }
 
-  .tuner-panel .section-index {
+  .tuner-heading h2,
+  .chart-heading h2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tuner-heading .section-index,
+  .chart-heading .section-index {
     margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .tuner-heading .text-button {
+    padding-block: 2px;
+  }
+
+  .peak-readout {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .peak-readout span {
+    white-space: nowrap;
+  }
+
+  .peak-readout strong {
+    line-height: 1;
   }
 
   .peak-readout strong {
